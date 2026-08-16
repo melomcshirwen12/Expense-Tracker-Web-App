@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ExpenseTracker — Admin Dashboard (OMR)</title>
+    <title>Expense Tracker Pro </title>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        /* ===== CSS Variables ===== */
+        /* ===== CSS VARIABLES (Light & Dark) ===== */
         :root {
             --primary: #4F46E5;
             --primary-dark: #4338CA;
@@ -29,13 +29,35 @@
             --gray-700: #374151;
             --gray-800: #1F2937;
             --gray-900: #111827;
-            --radius: 12px;
+            --bg-body: var(--gray-50);
+            --bg-card: #ffffff;
+            --text-primary: var(--gray-900);
+            --text-secondary: var(--gray-600);
+            --border-color: var(--gray-200);
             --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.10);
+            --radius: 12px;
             --transition: 0.25s ease;
         }
 
-        /* ===== Reset & Base ===== */
+        body.dark-mode {
+            --bg-body: #111827;
+            --bg-card: #1F2937;
+            --text-primary: #F9FAFB;
+            --text-secondary: #9CA3AF;
+            --border-color: #374151;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --primary-bg: #312E81;
+            --gray-100: #374151;
+            --gray-200: #4B5563;
+            --gray-300: #6B7280;
+            --gray-400: #9CA3AF;
+            --gray-50: #111827;
+            --gray-900: #F9FAFB;
+        }
+
+        /* ===== RESET & BASE ===== */
         *,
         *::before,
         *::after {
@@ -46,14 +68,15 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--gray-50);
-            color: var(--gray-800);
+            background: var(--bg-body);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* ===== Scrollbar ===== */
+        /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -68,7 +91,7 @@
             background: var(--gray-400);
         }
 
-        /* ===== Layout ===== */
+        /* ===== LAYOUT ===== */
         .app-wrapper {
             max-width: 1280px;
             margin: 0 auto;
@@ -77,13 +100,13 @@
             flex: 1;
         }
 
-        /* ===== Header ===== */
+        /* ===== HEADER ===== */
         .app-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 16px 0 20px;
-            border-bottom: 1px solid var(--gray-200);
+            border-bottom: 1px solid var(--border-color);
             margin-bottom: 28px;
             flex-wrap: wrap;
             gap: 12px;
@@ -95,7 +118,7 @@
             gap: 10px;
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--gray-900);
+            color: var(--text-primary);
             letter-spacing: -0.5px;
         }
         .app-brand i {
@@ -111,6 +134,27 @@
             border-radius: 20px;
             margin-left: 4px;
             letter-spacing: 0.3px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon-header {
+            background: transparent;
+            border: none;
+            color: var(--gray-500);
+            font-size: 1.2rem;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-icon-header:hover {
+            background: var(--gray-100);
+            color: var(--text-primary);
         }
 
         .nav-tabs {
@@ -142,7 +186,7 @@
             background: rgba(79, 70, 229, 0.06);
         }
         .nav-tab.active {
-            background: #fff;
+            background: var(--bg-card);
             color: var(--primary);
             box-shadow: var(--shadow);
         }
@@ -156,7 +200,7 @@
             margin-left: 2px;
         }
 
-        /* ===== Views ===== */
+        /* ===== VIEWS ===== */
         .view {
             display: none;
             animation: fadeUp 0.3s ease;
@@ -176,7 +220,70 @@
             }
         }
 
-        /* ===== Expenses View ===== */
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 360px;
+            width: 100%;
+        }
+        .toast {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            transform-origin: top right;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--primary);
+        }
+        .toast i {
+            font-size: 1.2rem;
+        }
+        .toast .toast-msg {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ===== TOOLBAR ===== */
         .expense-toolbar {
             display: flex;
             flex-wrap: wrap;
@@ -200,8 +307,8 @@
         .search-box {
             display: flex;
             align-items: center;
-            background: #fff;
-            border: 1px solid var(--gray-200);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 0 12px;
             transition: var(--transition);
@@ -220,27 +327,33 @@
             font-size: 0.9rem;
             outline: none;
             background: transparent;
-            width: 180px;
-            color: var(--gray-800);
+            width: 160px;
+            color: var(--text-primary);
         }
         .search-box input::placeholder {
             color: var(--gray-400);
         }
 
-        .filter-select {
+        .filter-select,
+        .filter-date {
             padding: 9px 14px;
-            border: 1px solid var(--gray-200);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            background: #fff;
+            background: var(--bg-card);
             font-size: 0.9rem;
-            color: var(--gray-700);
+            color: var(--text-primary);
             cursor: pointer;
             outline: none;
             transition: var(--transition);
         }
-        .filter-select:focus {
+        .filter-select:focus,
+        .filter-date:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+        }
+        .filter-date {
+            padding: 8px 12px;
+            max-width: 150px;
         }
 
         .btn {
@@ -283,12 +396,12 @@
         }
         .btn-outline {
             background: transparent;
-            border: 1px solid var(--gray-300);
-            color: var(--gray-600);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
         }
         .btn-outline:hover {
             background: var(--gray-100);
-            border-color: var(--gray-400);
+            border-color: var(--gray-300);
         }
         .btn-sm {
             padding: 5px 12px;
@@ -300,28 +413,28 @@
             border-radius: 8px;
             background: transparent;
             border: none;
-            color: var(--gray-600);
+            color: var(--gray-500);
             cursor: pointer;
             transition: var(--transition);
             font-size: 1rem;
         }
         .btn-icon:hover {
             background: var(--gray-100);
-            color: var(--gray-800);
+            color: var(--text-primary);
         }
         .btn-icon.danger:hover {
             background: #FEE2E2;
             color: var(--danger);
         }
 
-        /* ===== Add Expense Form ===== */
+        /* ===== ADD EXPENSE FORM ===== */
         .add-expense-card {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: var(--radius);
             padding: 20px 24px 24px;
             box-shadow: var(--shadow);
             margin-bottom: 28px;
-            border: 1px solid var(--gray-200);
+            border: 1px solid var(--border-color);
         }
         .add-expense-card .form-row {
             display: flex;
@@ -346,12 +459,12 @@
         .add-expense-card .form-group select {
             width: 100%;
             padding: 9px 12px;
-            border: 1px solid var(--gray-200);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 0.9rem;
             transition: var(--transition);
-            background: #fff;
-            color: var(--gray-800);
+            background: var(--bg-body);
+            color: var(--text-primary);
         }
         .add-expense-card .form-group input:focus,
         .add-expense-card .form-group select:focus {
@@ -359,15 +472,12 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
         }
-        .add-expense-card .form-group input[type="date"] {
-            color-scheme: light;
-        }
         .add-expense-card .btn-submit {
             flex: 0 0 auto;
             padding: 9px 32px;
         }
 
-        /* ===== Expense List ===== */
+        /* ===== EXPENSE LIST ===== */
         .expense-list-header {
             display: flex;
             justify-content: space-between;
@@ -390,20 +500,20 @@
         }
 
         .expense-item {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 10px;
             padding: 14px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: var(--shadow);
-            border: 1px solid var(--gray-100);
+            border: 1px solid var(--border-color);
             transition: var(--transition);
             flex-wrap: wrap;
             gap: 10px;
         }
         .expense-item:hover {
-            border-color: var(--gray-200);
+            border-color: var(--gray-300);
             box-shadow: var(--shadow-lg);
         }
         .expense-item .info {
@@ -423,7 +533,7 @@
         }
         .expense-item .desc {
             font-weight: 500;
-            color: var(--gray-800);
+            color: var(--text-primary);
             word-break: break-word;
         }
         .expense-item .date {
@@ -434,7 +544,7 @@
         .expense-item .amount {
             font-weight: 700;
             font-size: 1.05rem;
-            color: var(--gray-900);
+            color: var(--text-primary);
             white-space: nowrap;
         }
         .expense-item .actions {
@@ -461,7 +571,7 @@
             font-size: 0.95rem;
         }
 
-        /* ===== Dashboard ===== */
+        /* ===== DASHBOARD ===== */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -469,15 +579,15 @@
             margin-bottom: 28px;
         }
         .stat-card {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: var(--radius);
             padding: 18px 20px;
             box-shadow: var(--shadow);
-            border: 1px solid var(--gray-100);
+            border: 1px solid var(--border-color);
             transition: var(--transition);
         }
         .stat-card:hover {
-            border-color: var(--gray-200);
+            border-color: var(--gray-300);
             box-shadow: var(--shadow-lg);
         }
         .stat-card .label {
@@ -490,7 +600,7 @@
         .stat-card .value {
             font-size: 1.7rem;
             font-weight: 700;
-            color: var(--gray-900);
+            color: var(--text-primary);
             margin-top: 2px;
         }
         .stat-card .sub {
@@ -529,17 +639,17 @@
             margin-bottom: 28px;
         }
         .chart-card {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: var(--radius);
             padding: 20px 20px 16px;
             box-shadow: var(--shadow);
-            border: 1px solid var(--gray-100);
+            border: 1px solid var(--border-color);
         }
         .chart-card h4 {
             font-size: 0.95rem;
             font-weight: 600;
             margin-bottom: 14px;
-            color: var(--gray-700);
+            color: var(--text-secondary);
         }
         .chart-card .chart-wrap {
             position: relative;
@@ -551,23 +661,23 @@
         }
 
         .recent-transactions {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: var(--radius);
             padding: 20px 24px 24px;
             box-shadow: var(--shadow);
-            border: 1px solid var(--gray-100);
+            border: 1px solid var(--border-color);
         }
         .recent-transactions h4 {
             font-size: 0.95rem;
             font-weight: 600;
             margin-bottom: 14px;
-            color: var(--gray-700);
+            color: var(--text-secondary);
         }
         .recent-transactions .rt-item {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid var(--gray-100);
+            border-bottom: 1px solid var(--border-color);
             align-items: center;
             flex-wrap: wrap;
             gap: 6px;
@@ -590,7 +700,7 @@
         }
         .recent-transactions .rt-desc {
             font-weight: 500;
-            color: var(--gray-800);
+            color: var(--text-primary);
         }
         .recent-transactions .rt-date {
             font-size: 0.78rem;
@@ -598,46 +708,44 @@
         }
         .recent-transactions .rt-amount {
             font-weight: 600;
-            color: var(--gray-900);
+            color: var(--text-primary);
         }
 
-        /* ===== Modals ===== */
+        /* ===== MODALS ===== */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.35);
-            /* no backdrop-filter to avoid interference */
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             padding: 20px;
-            pointer-events: auto; /* allow clicks on overlay to close modal */
         }
         .modal-overlay.open {
             display: flex;
         }
         .modal-box {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: var(--radius);
             padding: 32px 36px 28px;
-            max-width: 460px;
+            max-width: 500px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.20);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
             animation: fadeUp 0.25s ease;
-            position: relative;
-            pointer-events: auto; /* modal itself is interactive */
+            border: 1px solid var(--border-color);
         }
         .modal-box h3 {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 16px;
+            color: var(--text-primary);
         }
         .modal-box .form-group {
             margin-bottom: 14px;
-            position: relative;
         }
         .modal-box .form-group label {
             display: block;
@@ -650,17 +758,12 @@
         .modal-box .form-group select {
             width: 100%;
             padding: 9px 12px;
-            border: 1px solid var(--gray-200);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 0.9rem;
             transition: var(--transition);
-            background: #fff;
-            position: relative;
-            z-index: 1; /* ensure input is above overlay */
-        }
-        .modal-box .form-group input[type="date"] {
-            z-index: 1001; /* boost above overlay for native picker */
-            position: relative;
+            background: var(--bg-body);
+            color: var(--text-primary);
         }
         .modal-box .form-group input:focus,
         .modal-box .form-group select:focus {
@@ -680,14 +783,14 @@
             margin-top: 2px;
         }
 
-        /* ===== Delete Confirmation Modal ===== */
+        /* Delete Modal */
         .delete-modal .modal-box {
             max-width: 400px;
             text-align: center;
         }
         .delete-modal .modal-box p {
             margin: 12px 0 20px;
-            color: var(--gray-600);
+            color: var(--text-secondary);
             font-size: 0.95rem;
         }
         .delete-modal .modal-box .delete-actions {
@@ -700,7 +803,80 @@
             justify-content: center;
         }
 
-        /* ===== Responsive ===== */
+        /* Settings Modal */
+        .settings-modal .modal-box {
+            max-width: 480px;
+        }
+        .settings-modal .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .settings-modal .setting-item:last-child {
+            border-bottom: none;
+        }
+        .settings-modal .setting-item .setting-label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .settings-modal .setting-item .setting-label span {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .settings-modal .setting-item .setting-label small {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+        }
+        .settings-modal .setting-item .setting-control {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .settings-modal .setting-item .setting-control input[type="text"] {
+            width: 80px;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            text-align: center;
+        }
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: var(--gray-300);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        .toggle-switch.active::after {
+            left: 22px;
+        }
+        .btn-import-export {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
             .dashboard-charts {
                 grid-template-columns: 1fr;
@@ -717,6 +893,9 @@
                 gap: 12px;
             }
             .app-brand {
+                justify-content: center;
+            }
+            .header-actions {
                 justify-content: center;
             }
             .nav-tabs {
@@ -740,6 +919,9 @@
             }
             .search-box input {
                 width: 120px;
+            }
+            .filter-date {
+                max-width: 130px;
             }
 
             .add-expense-card .form-row {
@@ -778,6 +960,15 @@
             .modal-box {
                 padding: 24px 20px;
             }
+            .settings-modal .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .settings-modal .setting-item .setting-control {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
 
         @media (max-width: 420px) {
@@ -788,9 +979,14 @@
                 padding: 6px 10px;
                 font-size: 0.75rem;
             }
+            .toast-container {
+                max-width: 90%;
+                right: 10px;
+                top: 10px;
+            }
         }
 
-        /* ===== Helper ===== */
+        /* ===== UTILITY ===== */
         .text-muted {
             color: var(--gray-400);
         }
@@ -805,6 +1001,9 @@
             align-items: center;
             justify-content: center;
         }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -815,8 +1014,16 @@
         <header class="app-header">
             <div class="app-brand">
                 <i class="fas fa-wallet"></i>
-                ExpenseTracker
-                <span>OMR</span>
+                Expense Tracker
+                <span id="currencyBadge">OMR</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon-header" id="settingsToggleBtn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="btn-icon-header" id="darkModeToggle" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
             <nav class="nav-tabs" id="navTabs">
                 <button class="nav-tab active" data-view="expenses">
@@ -840,7 +1047,7 @@
                         <input type="text" id="expDesc" placeholder="e.g. Coffee" required />
                     </div>
                     <div class="form-group">
-                        <label>Amount (OMR)</label>
+                        <label>Amount (<span id="currencyLabelAdd">OMR</span>)</label>
                         <input type="number" id="expAmount" placeholder="0.000" step="0.001" min="0.001" required />
                     </div>
                     <div class="form-group">
@@ -871,7 +1078,7 @@
                 <div class="left">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Search expenses..." />
+                        <input type="text" id="searchInput" placeholder="Search..." />
                     </div>
                     <select id="categoryFilter" class="filter-select">
                         <option value="all">All Categories</option>
@@ -884,12 +1091,14 @@
                         <option value="Education">📚 Education</option>
                         <option value="Other">📌 Other</option>
                     </select>
+                    <input type="date" id="filterDateFrom" class="filter-date" placeholder="From" title="Date From" />
+                    <input type="date" id="filterDateTo" class="filter-date" placeholder="To" title="Date To" />
                 </div>
                 <div class="right">
                     <button class="btn btn-outline btn-sm" id="clearFiltersBtn">
                         <i class="fas fa-undo"></i> Reset
                     </button>
-                    <span class="text-muted" style="font-size:0.85rem;" id="totalExpensesDisplay">Total: OMR 0.000</span>
+                    <span class="text-muted" style="font-size:0.85rem;" id="totalExpensesDisplay">Total: <span id="totalAmountDisplay">OMR 0.000</span></span>
                 </div>
             </div>
 
@@ -899,7 +1108,6 @@
                 <span class="count" id="expenseCountLabel">0 entries</span>
             </div>
             <div class="expense-list" id="expenseList">
-                <!-- Rendered by JS -->
                 <div class="empty-state">
                     <i class="fas fa-receipt"></i>
                     <p>No expenses yet. Add your first expense above!</p>
@@ -972,7 +1180,7 @@
                         <input type="text" id="editDesc" required />
                     </div>
                     <div class="form-group">
-                        <label>Amount (OMR)</label>
+                        <label>Amount (<span id="currencyLabelEdit">OMR</span>)</label>
                         <input type="number" id="editAmount" step="0.001" min="0.001" required />
                     </div>
                     <div class="form-group">
@@ -991,7 +1199,7 @@
                     <div class="form-group">
                         <label>Date</label>
                         <input type="date" id="editDate" required />
-                        <div class="hint">After selecting a date, tap "Done" or press Enter to confirm.</div>
+                        <div class="hint">After selecting, tap "Done" or press Enter.</div>
                     </div>
                     <div class="modal-actions">
                         <button type="button" class="btn btn-outline" id="editCancelBtn">Cancel</button>
@@ -1001,7 +1209,7 @@
             </div>
         </div>
 
-        <!-- ===== MODAL: DELETE CONFIRMATION ===== -->
+        <!-- ===== MODAL: DELETE ===== -->
         <div class="modal-overlay delete-modal" id="deleteModal">
             <div class="modal-box">
                 <h3 style="color:var(--danger);"><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h3>
@@ -1013,13 +1221,65 @@
             </div>
         </div>
 
+        <!-- ===== MODAL: SETTINGS ===== -->
+        <div class="modal-overlay settings-modal" id="settingsModal">
+            <div class="modal-box">
+                <h3><i class="fas fa-cog" style="color:var(--primary);margin-right:8px;"></i> Settings</h3>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span>Dark Mode</span>
+                        <small>Switch between light and dark theme</small>
+                    </div>
+                    <div class="setting-control">
+                        <button class="toggle-switch" id="settingsDarkToggle" aria-label="Toggle dark mode"></button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span>Currency Symbol</span>
+                        <small>Change the currency symbol (e.g., OMR, USD)</small>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" id="settingsCurrency" value="OMR" maxlength="10" />
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span>Data Management</span>
+                        <small>Export or import your expense data</small>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-outline btn-sm btn-import-export" id="exportDataBtn"><i class="fas fa-download"></i> Export</button>
+                        <button class="btn btn-outline btn-sm btn-import-export" id="importDataBtn"><i class="fas fa-upload"></i> Import</button>
+                        <input type="file" id="importFileInput" accept=".json" style="display:none;" />
+                    </div>
+                </div>
+                <div class="setting-item" style="border-bottom: none;">
+                    <div class="setting-label">
+                        <span>Danger Zone</span>
+                        <small>Permanently delete all data</small>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-danger btn-sm" id="clearAllDataBtn"><i class="fas fa-trash"></i> Clear All</button>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" id="settingsCloseBtn">Close</button>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <script>
         // ============================================================
         //  DATA LAYER
         // ============================================================
         const STORAGE_KEY = 'expenseTrackerData';
+        const SETTINGS_KEY = 'expenseTrackerSettings';
 
         function loadExpenses() {
             try {
@@ -1036,7 +1296,24 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
         }
 
+        function loadSettings() {
+            try {
+                const raw = localStorage.getItem(SETTINGS_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed === 'object') return parsed;
+                }
+            } catch (_) { /* ignore */ }
+            return { darkMode: false, currency: 'OMR' };
+        }
+
+        function saveSettings(settings) {
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+        }
+
         let expenses = loadExpenses();
+        let settings = loadSettings();
+        let currencySymbol = settings.currency || 'OMR';
 
         // ============================================================
         //  HELPERS
@@ -1046,7 +1323,7 @@
         }
 
         function formatCurrency(amount) {
-            return 'OMR ' + Number(amount).toFixed(3);
+            return currencySymbol + ' ' + Number(amount).toFixed(3);
         }
 
         function formatDate(dateStr) {
@@ -1089,6 +1366,42 @@
             return map[cat] || '#6B7280';
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============================================================
+        //  TOAST SYSTEM
+        // ============================================================
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            else if (type === 'error') icon = 'fa-exclamation-circle';
+            else if (type === 'warning') icon = 'fa-exclamation-triangle';
+
+            toast.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span class="toast-msg">${escapeHtml(message)}</span>
+                <button class="toast-close">&times;</button>
+            `;
+
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.remove();
+            });
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+            }, duration);
+        }
+
         // ============================================================
         //  RENDER: EXPENSES LIST
         // ============================================================
@@ -1096,6 +1409,8 @@
             const list = document.getElementById('expenseList');
             const search = document.getElementById('searchInput').value.toLowerCase().trim();
             const categoryFilter = document.getElementById('categoryFilter').value;
+            const dateFrom = document.getElementById('filterDateFrom').value;
+            const dateTo = document.getElementById('filterDateTo').value;
 
             let filtered = expenses;
 
@@ -1104,6 +1419,12 @@
             }
             if (categoryFilter !== 'all') {
                 filtered = filtered.filter(e => e.category === categoryFilter);
+            }
+            if (dateFrom) {
+                filtered = filtered.filter(e => e.date >= dateFrom);
+            }
+            if (dateTo) {
+                filtered = filtered.filter(e => e.date <= dateTo);
             }
 
             // Sort by date DESC, then by createdAt DESC
@@ -1115,7 +1436,7 @@
             // Update count & total
             document.getElementById('expenseCountLabel').textContent = filtered.length + ' entries';
             const total = filtered.reduce((sum, e) => sum + Number(e.amount), 0);
-            document.getElementById('totalExpensesDisplay').textContent = 'Total: ' + formatCurrency(total);
+            document.getElementById('totalAmountDisplay').textContent = formatCurrency(total);
             document.getElementById('expenseCountBadge').textContent = expenses.length;
 
             if (filtered.length === 0) {
@@ -1148,19 +1469,12 @@
             });
             list.innerHTML = html;
 
-            // Attach event listeners for edit/delete
             list.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => openEditModal(btn.dataset.id));
             });
             list.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', () => showDeleteModal(btn.dataset.id));
             });
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
 
         // ============================================================
@@ -1176,7 +1490,6 @@
             document.getElementById('statTotal').textContent = formatCurrency(total);
             document.getElementById('statCount').textContent = count;
 
-            // Daily average (last 30 days)
             const now = new Date();
             const thirtyDaysAgo = new Date(now);
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -1186,7 +1499,6 @@
             const avg = recent.length > 0 ? recentTotal / 30 : 0;
             document.getElementById('statDailyAvg').textContent = formatCurrency(avg);
 
-            // Top category
             const catMap = {};
             expenses.forEach(e => {
                 catMap[e.category] = (catMap[e.category] || 0) + Number(e.amount);
@@ -1201,7 +1513,6 @@
             '—';
 
             // --- Charts ---
-            // Category pie
             const ctxCat = document.getElementById('categoryChart').getContext('2d');
             const catLabels = Object.keys(catMap);
             const catValues = Object.values(catMap);
@@ -1281,7 +1592,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: v => 'OMR ' + v.toFixed(0)
+                                callback: v => currencySymbol + ' ' + v.toFixed(0)
                             }
                         }
                     }
@@ -1334,13 +1645,16 @@
             expenses.push(newExp);
             saveExpenses(expenses);
             renderAll();
+            showToast(`Added "${description}" for ${formatCurrency(amount)}`, 'success');
         }
 
         function deleteExpense(id) {
+            const exp = expenses.find(e => e.id === id);
             expenses = expenses.filter(e => e.id !== id);
             saveExpenses(expenses);
             renderAll();
             pendingDeleteId = null;
+            if (exp) showToast(`Deleted "${exp.description}"`, 'warning');
         }
 
         function updateExpense(id, description, amount, category, date) {
@@ -1355,14 +1669,68 @@
             };
             saveExpenses(expenses);
             renderAll();
+            showToast(`Updated "${description}"`, 'info');
         }
 
         function getExpense(id) {
             return expenses.find(e => e.id === id);
         }
 
+        function clearAllData() {
+            if (!confirm('⚠️ Permanently delete ALL expense data? This cannot be undone!')) return;
+            expenses = [];
+            saveExpenses(expenses);
+            renderAll();
+            showToast('All data cleared', 'error');
+        }
+
         // ============================================================
-        //  EDIT MODAL
+        //  IMPORT / EXPORT
+        // ============================================================
+        function exportData() {
+            if (expenses.length === 0) {
+                showToast('No data to export', 'warning');
+                return;
+            }
+            const data = JSON.stringify(expenses, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `expenses_${getTodayStr()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Data exported successfully', 'success');
+        }
+
+        function importData(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!Array.isArray(data)) throw new Error('Invalid format');
+                    // Validate basic structure
+                    const valid = data.every(item => item.id && item.description && item.amount && item.category && item
+                        .date);
+                    if (!valid) throw new Error('Missing required fields in some entries');
+
+                    if (expenses.length > 0) {
+                        if (!confirm(`This will replace ${expenses.length} existing entries. Continue?`)) return;
+                    }
+
+                    expenses = data;
+                    saveExpenses(expenses);
+                    renderAll();
+                    showToast(`Imported ${expenses.length} entries successfully`, 'success');
+                } catch (err) {
+                    showToast('Import failed: ' + err.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // ============================================================
+        //  MODALS
         // ============================================================
         function openEditModal(id) {
             const exp = getExpense(id);
@@ -1379,9 +1747,6 @@
             document.getElementById('editModal').classList.remove('open');
         }
 
-        // ============================================================
-        //  DELETE CONFIRMATION MODAL
-        // ============================================================
         function showDeleteModal(id) {
             pendingDeleteId = id;
             document.getElementById('deleteModal').classList.add('open');
@@ -1397,6 +1762,63 @@
                 deleteExpense(pendingDeleteId);
                 closeDeleteModal();
             }
+        }
+
+        function openSettingsModal() {
+            document.getElementById('settingsCurrency').value = currencySymbol;
+            const darkToggle = document.getElementById('settingsDarkToggle');
+            if (document.body.classList.contains('dark-mode')) {
+                darkToggle.classList.add('active');
+            } else {
+                darkToggle.classList.remove('active');
+            }
+            document.getElementById('settingsModal').classList.add('open');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('open');
+        }
+
+        // ============================================================
+        //  SETTINGS
+        // ============================================================
+        function applySettings() {
+            const newCurrency = document.getElementById('settingsCurrency').value.trim().toUpperCase() || 'OMR';
+            currencySymbol = newCurrency;
+            settings.currency = currencySymbol;
+
+            const isDark = document.body.classList.contains('dark-mode');
+            settings.darkMode = isDark;
+            saveSettings(settings);
+
+            // Update UI
+            document.querySelectorAll('.currency-label').forEach(el => el.textContent = currencySymbol);
+            document.getElementById('currencyBadge').textContent = currencySymbol;
+            document.getElementById('currencyLabelAdd').textContent = currencySymbol;
+            document.getElementById('currencyLabelEdit').textContent = currencySymbol;
+
+            renderAll();
+            showToast(`Settings updated (${currencySymbol})`, 'success');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            const icon = document.querySelector('#darkModeToggle i');
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            const settingsToggle = document.getElementById('settingsDarkToggle');
+            if (isDark) {
+                settingsToggle.classList.add('active');
+            } else {
+                settingsToggle.classList.remove('active');
+            }
+            settings.darkMode = isDark;
+            saveSettings(settings);
+            // Re-render charts to match theme (Chart.js auto-detects, but we force redraw for safety)
+            setTimeout(() => {
+                if (categoryChartInstance) categoryChartInstance.update();
+                if (monthlyChartInstance) monthlyChartInstance.update();
+            }, 100);
         }
 
         // ============================================================
@@ -1431,6 +1853,19 @@
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
 
+            // --- Apply saved settings ---
+            if (settings.darkMode) {
+                document.body.classList.add('dark-mode');
+                document.querySelector('#darkModeToggle i').className = 'fas fa-sun';
+            } else {
+                document.querySelector('#darkModeToggle i').className = 'fas fa-moon';
+            }
+            currencySymbol = settings.currency || 'OMR';
+            document.querySelectorAll('.currency-label').forEach(el => el.textContent = currencySymbol);
+            document.getElementById('currencyBadge').textContent = currencySymbol;
+            document.getElementById('currencyLabelAdd').textContent = currencySymbol;
+            document.getElementById('currencyLabelEdit').textContent = currencySymbol;
+
             // --- Set default date ---
             document.getElementById('expDate').value = getTodayStr();
 
@@ -1442,9 +1877,9 @@
                 const category = document.getElementById('expCategory').value;
                 const date = document.getElementById('expDate').value;
 
-                if (!desc) { alert('Please enter a description.'); return; }
-                if (isNaN(amount) || amount <= 0) { alert('Please enter a valid amount.'); return; }
-                if (!date) { alert('Please select a date.'); return; }
+                if (!desc) { showToast('Please enter a description.', 'error'); return; }
+                if (isNaN(amount) || amount <= 0) { showToast('Please enter a valid amount.', 'error'); return; }
+                if (!date) { showToast('Please select a date.', 'error'); return; }
 
                 addExpense(desc, amount, category, date);
                 document.getElementById('expDesc').value = '';
@@ -1463,11 +1898,16 @@
             // --- Search & Filter ---
             document.getElementById('searchInput').addEventListener('input', renderExpenses);
             document.getElementById('categoryFilter').addEventListener('change', renderExpenses);
+            document.getElementById('filterDateFrom').addEventListener('change', renderExpenses);
+            document.getElementById('filterDateTo').addEventListener('change', renderExpenses);
 
             document.getElementById('clearFiltersBtn').addEventListener('click', function() {
                 document.getElementById('searchInput').value = '';
                 document.getElementById('categoryFilter').value = 'all';
+                document.getElementById('filterDateFrom').value = '';
+                document.getElementById('filterDateTo').value = '';
                 renderExpenses();
+                showToast('Filters reset', 'info');
             });
 
             // --- Edit modal ---
@@ -1475,7 +1915,6 @@
             document.getElementById('editModal').addEventListener('click', function(e) {
                 if (e.target === this) closeEditModal();
             });
-
             document.getElementById('editForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const id = document.getElementById('editId').value;
@@ -1484,9 +1923,9 @@
                 const category = document.getElementById('editCategory').value;
                 const date = document.getElementById('editDate').value;
 
-                if (!desc) { alert('Please enter a description.'); return; }
-                if (isNaN(amount) || amount <= 0) { alert('Please enter a valid amount.'); return; }
-                if (!date) { alert('Please select a date.'); return; }
+                if (!desc) { showToast('Please enter a description.', 'error'); return; }
+                if (isNaN(amount) || amount <= 0) { showToast('Please enter a valid amount.', 'error'); return; }
+                if (!date) { showToast('Please select a date.', 'error'); return; }
 
                 updateExpense(id, desc, amount, category, date);
                 closeEditModal();
@@ -1499,14 +1938,60 @@
             });
             document.getElementById('deleteConfirmBtn').addEventListener('click', confirmDelete);
 
+            // --- Settings modal ---
+            document.getElementById('settingsToggleBtn').addEventListener('click', openSettingsModal);
+            document.getElementById('settingsCloseBtn').addEventListener('click', function() {
+                applySettings();
+                closeSettingsModal();
+            });
+            document.getElementById('settingsModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    applySettings();
+                    closeSettingsModal();
+                }
+            });
+            document.getElementById('settingsDarkToggle').addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleDarkMode();
+                // Update the toggle state visually
+                this.classList.toggle('active');
+            });
+
+            // --- Dark mode toggle (header) ---
+            document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+
+            // --- Import / Export ---
+            document.getElementById('exportDataBtn').addEventListener('click', exportData);
+            document.getElementById('importDataBtn').addEventListener('click', function() {
+                document.getElementById('importFileInput').click();
+            });
+            document.getElementById('importFileInput').addEventListener('change', function(e) {
+                if (this.files && this.files.length > 0) {
+                    importData(this.files[0]);
+                    this.value = '';
+                }
+            });
+
+            // --- Clear all data ---
+            document.getElementById('clearAllDataBtn').addEventListener('click', clearAllData);
+
             // --- Keyboard shortcuts ---
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     closeEditModal();
                     closeDeleteModal();
+                    if (document.getElementById('settingsModal').classList.contains('open')) {
+                        applySettings();
+                        closeSettingsModal();
+                    }
                 }
                 if (e.key === 'Enter' && document.getElementById('deleteModal').classList.contains('open')) {
                     confirmDelete();
+                }
+                // Ctrl+S to open settings
+                if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    openSettingsModal();
                 }
             });
 
