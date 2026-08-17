@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Expense Tracker Pro </title>
+    <title>ExpenseTracker Pro — Budget & Salary</title>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
@@ -136,6 +136,48 @@
             letter-spacing: 0.3px;
         }
 
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .clock-display {
+            font-family: 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: var(--gray-100);
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .clock-display i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .clock-display .date-part {
+            font-weight: 400;
+            color: var(--gray-500);
+            font-size: 0.8rem;
+        }
+        .clock-display .tz-offset {
+            font-size: 0.7rem;
+            color: var(--gray-400);
+            font-weight: 400;
+            background: var(--gray-200);
+            padding: 0 6px;
+            border-radius: 4px;
+            line-height: 1.5;
+        }
+
         .header-actions {
             display: flex;
             align-items: center;
@@ -165,21 +207,22 @@
             border-radius: 10px;
         }
         .nav-tab {
-            padding: 8px 22px;
+            padding: 8px 16px;
             border: none;
             background: transparent;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             color: var(--gray-600);
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            white-space: nowrap;
         }
         .nav-tab i {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         .nav-tab:hover {
             color: var(--gray-800);
@@ -193,7 +236,7 @@
         .nav-tab .badge {
             background: var(--primary-bg);
             color: var(--primary);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
             padding: 1px 8px;
             border-radius: 12px;
@@ -571,6 +614,199 @@
             font-size: 0.95rem;
         }
 
+        /* ===== BUDGET VIEW ===== */
+        .budget-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .budget-stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            text-align: center;
+        }
+        .budget-stat-card:hover {
+            border-color: var(--gray-300);
+            box-shadow: var(--shadow-lg);
+        }
+        .budget-stat-card .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--gray-500);
+        }
+        .budget-stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 4px;
+        }
+        .budget-stat-card .sub {
+            font-size: 0.8rem;
+            color: var(--gray-400);
+            margin-top: 2px;
+        }
+        .budget-stat-card .icon-wrap {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .salary-input-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 16px;
+        }
+        .salary-input-card .form-group {
+            flex: 1 1 200px;
+        }
+        .salary-input-card .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+        .salary-input-card .form-group input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+        .salary-input-card .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+        }
+
+        .budget-category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .budget-category-item {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .budget-category-item .cat-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .budget-category-item .cat-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .budget-category-item .cat-spend {
+            font-size: 0.85rem;
+            color: var(--gray-400);
+        }
+        .budget-category-item .cat-input {
+            width: 120px;
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            text-align: right;
+        }
+        .budget-category-item .cat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+        }
+        .budget-category-item .budget-status {
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 2px 10px;
+            border-radius: 12px;
+            min-width: 60px;
+            text-align: center;
+        }
+        .budget-status.under {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        .budget-status.over {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        .budget-status.exact {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        .budget-status.none {
+            background: var(--gray-200);
+            color: var(--gray-500);
+        }
+        body.dark-mode .budget-status.under {
+            background: #064E3B;
+            color: #A7F3D0;
+        }
+        body.dark-mode .budget-status.over {
+            background: #7F1D1D;
+            color: #FCA5A5;
+        }
+        body.dark-mode .budget-status.exact {
+            background: #78350F;
+            color: #FCD34D;
+        }
+        body.dark-mode .budget-status.none {
+            background: #374151;
+            color: #9CA3AF;
+        }
+
+        .budget-chart-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px 20px 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+        .budget-chart-container h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: var(--text-secondary);
+        }
+        .budget-chart-container .chart-wrap {
+            position: relative;
+            height: 260px;
+        }
+        .budget-chart-container .chart-wrap canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
         /* ===== DASHBOARD ===== */
         .dashboard-grid {
             display: grid;
@@ -813,6 +1049,8 @@
             justify-content: space-between;
             padding: 14px 0;
             border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .settings-modal .setting-item:last-child {
             border-bottom: none;
@@ -821,6 +1059,7 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
+            flex: 1;
         }
         .settings-modal .setting-item .setting-label span {
             font-weight: 500;
@@ -834,6 +1073,15 @@
             display: flex;
             gap: 8px;
             align-items: center;
+            flex-wrap: wrap;
+        }
+        .settings-modal .setting-item .setting-control select {
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-size: 0.9rem;
         }
         .settings-modal .setting-item .setting-control input[type="text"] {
             width: 80px;
@@ -843,6 +1091,7 @@
             background: var(--bg-body);
             color: var(--text-primary);
             text-align: center;
+            font-size: 0.9rem;
         }
         .toggle-switch {
             width: 44px;
@@ -878,7 +1127,8 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
-            .dashboard-charts {
+            .dashboard-charts,
+            .budget-category-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -895,15 +1145,20 @@
             .app-brand {
                 justify-content: center;
             }
+            .header-center {
+                order: 3;
+                justify-content: center;
+            }
             .header-actions {
                 justify-content: center;
             }
             .nav-tabs {
                 justify-content: center;
+                flex-wrap: wrap;
             }
             .nav-tab {
-                padding: 6px 14px;
-                font-size: 0.8rem;
+                padding: 6px 12px;
+                font-size: 0.75rem;
             }
             .nav-tab i {
                 display: none;
@@ -950,10 +1205,12 @@
                 font-size: 1rem;
             }
 
-            .dashboard-grid {
+            .dashboard-grid,
+            .budget-summary-grid {
                 grid-template-columns: 1fr 1fr;
             }
-            .stat-card .value {
+            .stat-card .value,
+            .budget-stat-card .value {
                 font-size: 1.3rem;
             }
 
@@ -972,17 +1229,37 @@
         }
 
         @media (max-width: 420px) {
-            .dashboard-grid {
+            .dashboard-grid,
+            .budget-summary-grid {
                 grid-template-columns: 1fr;
             }
             .nav-tab {
-                padding: 6px 10px;
-                font-size: 0.75rem;
+                padding: 6px 8px;
+                font-size: 0.7rem;
             }
             .toast-container {
                 max-width: 90%;
                 right: 10px;
                 top: 10px;
+            }
+            .settings-modal .setting-item .setting-control select {
+                flex: 1;
+            }
+            .settings-modal .setting-item .setting-control input[type="text"] {
+                width: 60px;
+            }
+            .clock-display {
+                font-size: 0.8rem;
+                padding: 4px 10px;
+            }
+            .clock-display .date-part {
+                font-size: 0.7rem;
+            }
+            .clock-display .tz-offset {
+                font-size: 0.6rem;
+            }
+            .budget-category-item .cat-input {
+                width: 80px;
             }
         }
 
@@ -1004,6 +1281,15 @@
         .hidden {
             display: none !important;
         }
+        .text-success {
+            color: var(--success);
+        }
+        .text-danger {
+            color: var(--danger);
+        }
+        .text-warning {
+            color: var(--warning);
+        }
     </style>
 </head>
 <body>
@@ -1014,8 +1300,16 @@
         <header class="app-header">
             <div class="app-brand">
                 <i class="fas fa-wallet"></i>
-                Expense Tracker
+                ExpenseTracker
                 <span id="currencyBadge">OMR</span>
+            </div>
+            <div class="header-center">
+                <div class="clock-display" id="clockDisplay">
+                    <i class="fas fa-clock"></i>
+                    <span id="clockTime">--:--:--</span>
+                    <span class="date-part" id="clockDate">---</span>
+                    <span class="tz-offset" id="clockOffset">+0</span>
+                </div>
             </div>
             <div class="header-actions">
                 <button class="btn-icon-header" id="settingsToggleBtn" title="Settings">
@@ -1032,6 +1326,9 @@
                 </button>
                 <button class="nav-tab" data-view="dashboard">
                     <i class="fas fa-chart-pie"></i> Dashboard
+                </button>
+                <button class="nav-tab" data-view="budget">
+                    <i class="fas fa-coins"></i> Budget & Salary
                 </button>
             </nav>
         </header>
@@ -1121,7 +1418,7 @@
             <!-- Stats -->
             <div class="dashboard-grid" id="statsGrid">
                 <div class="stat-card">
-                    <div class="icon-wrap blue"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="icon-wrap blue"><i class="fas fa-coins"></i></div>
                     <div class="label">Total Expenses</div>
                     <div class="value" id="statTotal">OMR 0.000</div>
                     <div class="sub">All time</div>
@@ -1167,6 +1464,61 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- ===== VIEW: BUDGET & SALARY ===== -->
+        <section class="view" id="viewBudget">
+
+            <!-- Salary Input -->
+            <div class="salary-input-card">
+                <div class="form-group">
+                    <label>Monthly Salary (<span id="currencyLabelSalary">OMR</span>)</label>
+                    <input type="number" id="monthlySalary" placeholder="0.000" step="0.001" min="0" />
+                </div>
+                <button class="btn btn-primary" id="updateSalaryBtn"><i class="fas fa-save"></i> Update Salary</button>
+                <span class="text-muted" style="font-size:0.85rem; margin-left: auto;" id="annualSalaryDisplay">Annual: OMR 0.000</span>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="budget-summary-grid" id="budgetSummaryGrid">
+                <div class="budget-stat-card">
+                    <div class="icon-wrap"><i class="fas fa-money-bill-wave" style="color:var(--primary);"></i></div>
+                    <div class="label">Monthly Income</div>
+                    <div class="value" id="budgetIncome">OMR 0.000</div>
+                    <div class="sub">Salary</div>
+                </div>
+                <div class="budget-stat-card">
+                    <div class="icon-wrap"><i class="fas fa-shopping-cart" style="color:var(--danger);"></i></div>
+                    <div class="label">Monthly Expenses</div>
+                    <div class="value" id="budgetExpenses">OMR 0.000</div>
+                    <div class="sub">This month</div>
+                </div>
+                <div class="budget-stat-card">
+                    <div class="icon-wrap"><i class="fas fa-piggy-bank" style="color:var(--success);"></i></div>
+                    <div class="label">Monthly Savings</div>
+                    <div class="value" id="budgetSavings">OMR 0.000</div>
+                    <div class="sub" id="savingsRate">0% saved</div>
+                </div>
+                <div class="budget-stat-card">
+                    <div class="icon-wrap"><i class="fas fa-percent" style="color:var(--warning);"></i></div>
+                    <div class="label">Spending Rate</div>
+                    <div class="value" id="budgetSpendRate">0%</div>
+                    <div class="sub">of income</div>
+                </div>
+            </div>
+
+            <!-- Budget per Category -->
+            <h3 style="margin-bottom: 14px; font-weight: 600;"><i class="fas fa-list-check" style="color:var(--primary);margin-right:8px;"></i> Budget Allocation</h3>
+            <div class="budget-category-grid" id="budgetCategoryGrid">
+                <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Budget vs Actual Chart -->
+            <div class="budget-chart-container">
+                <h4><i class="fas fa-chart-bar" style="color:var(--primary);margin-right:6px;"></i> Budget vs Actual Spending</h4>
+                <div class="chart-wrap"><canvas id="budgetChart"></canvas></div>
+            </div>
+
         </section>
 
         <!-- ===== MODAL: EDIT ===== -->
@@ -1236,10 +1588,18 @@
                 </div>
                 <div class="setting-item">
                     <div class="setting-label">
-                        <span>Currency Symbol</span>
-                        <small>Change the currency symbol (e.g., OMR, USD)</small>
+                        <span>Currency</span>
+                        <small>Select a preset or type your own symbol</small>
                     </div>
                     <div class="setting-control">
+                        <select id="settingsCurrencyPreset">
+                            <option value="OMR">OMR - Omani Rial</option>
+                            <option value="PHP">PHP - Philippine Peso</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="custom">Custom</option>
+                        </select>
                         <input type="text" id="settingsCurrency" value="OMR" maxlength="10" />
                     </div>
                 </div>
@@ -1304,7 +1664,7 @@
                     if (parsed && typeof parsed === 'object') return parsed;
                 }
             } catch (_) { /* ignore */ }
-            return { darkMode: false, currency: 'OMR' };
+            return { darkMode: false, currency: 'OMR', salary: 0, budgets: {} };
         }
 
         function saveSettings(settings) {
@@ -1314,6 +1674,8 @@
         let expenses = loadExpenses();
         let settings = loadSettings();
         let currencySymbol = settings.currency || 'OMR';
+        let monthlySalary = settings.salary || 0;
+        let budgetAllocation = settings.budgets || {};
 
         // ============================================================
         //  HELPERS
@@ -1326,6 +1688,10 @@
             return currencySymbol + ' ' + Number(amount).toFixed(3);
         }
 
+        function formatCurrencyShort(amount) {
+            return currencySymbol + ' ' + Number(amount).toFixed(2);
+        }
+
         function formatDate(dateStr) {
             const d = new Date(dateStr + 'T00:00:00');
             return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -1336,6 +1702,11 @@
             return d.getFullYear() + '-' +
                 String(d.getMonth() + 1).padStart(2, '0') + '-' +
                 String(d.getDate()).padStart(2, '0');
+        }
+
+        function getCurrentMonthStr() {
+            const d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
         }
 
         function getCategoryEmoji(cat) {
@@ -1373,6 +1744,81 @@
         }
 
         // ============================================================
+        //  CLOCK & TIME ZONE
+        // ============================================================
+        const currencyTimeZones = {
+            'OMR': 'Asia/Muscat',
+            'PHP': 'Asia/Manila',
+            'USD': 'America/New_York',
+            'EUR': 'Europe/Berlin',
+            'GBP': 'Europe/London'
+        };
+
+        const currencyLocales = {
+            'OMR': 'en-US',
+            'PHP': 'en-US',
+            'USD': 'en-US',
+            'EUR': 'en-US',
+            'GBP': 'en-US'
+        };
+
+        function getTimeZoneForCurrency(currency) {
+            return currencyTimeZones[currency] || undefined;
+        }
+
+        function getLocaleForCurrency(currency) {
+            return currencyLocales[currency] || 'en-US';
+        }
+
+        let clockInterval = null;
+
+        function updateClock() {
+            const now = new Date();
+            const tz = getTimeZoneForCurrency(currencySymbol);
+            const locale = getLocaleForCurrency(currencySymbol);
+
+            const timeOptions = {
+                timeZone: tz,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            const dateOptions = {
+                timeZone: tz,
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            };
+
+            const timeStr = new Intl.DateTimeFormat(locale, timeOptions).format(now);
+            const dateStr = new Intl.DateTimeFormat(locale, dateOptions).format(now);
+
+            let offsetStr = '';
+            if (tz) {
+                const parts = new Intl.DateTimeFormat('en-US', {
+                    timeZone: tz,
+                    timeZoneName: 'shortOffset'
+                }).formatToParts(now);
+                const offsetPart = parts.find(p => p.type === 'timeZoneName');
+                if (offsetPart) {
+                    offsetStr = offsetPart.value;
+                }
+            }
+
+            document.getElementById('clockTime').textContent = timeStr;
+            document.getElementById('clockDate').textContent = dateStr;
+            document.getElementById('clockOffset').textContent = offsetStr || 'Local';
+        }
+
+        function startClock() {
+            if (clockInterval) clearInterval(clockInterval);
+            updateClock();
+            clockInterval = setInterval(updateClock, 1000);
+        }
+
+        // ============================================================
         //  TOAST SYSTEM
         // ============================================================
         function showToast(message, type = 'info', duration = 3000) {
@@ -1403,6 +1849,52 @@
         }
 
         // ============================================================
+        //  BUDGET & SALARY LOGIC
+        // ============================================================
+        function getCurrentMonthExpenses() {
+            const month = getCurrentMonthStr();
+            return expenses.filter(e => e.date.startsWith(month));
+        }
+
+        function getCategorySpending(category) {
+            const monthExpenses = getCurrentMonthExpenses();
+            return monthExpenses
+                .filter(e => e.category === category)
+                .reduce((sum, e) => sum + Number(e.amount), 0);
+        }
+
+        function getAllCategories() {
+            const cats = ['Food', 'Transport', 'Entertainment', 'Shopping', 'Bills', 'Healthcare', 'Education', 'Other'];
+            return cats;
+        }
+
+        function getMonthlyStats() {
+            const income = monthlySalary || 0;
+            const monthExpenses = getCurrentMonthExpenses();
+            const totalExpenses = monthExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
+            const savings = income - totalExpenses;
+            const spendRate = income > 0 ? (totalExpenses / income) * 100 : 0;
+            return { income, totalExpenses, savings, spendRate };
+        }
+
+        function updateSalary(value) {
+            monthlySalary = parseFloat(value) || 0;
+            settings.salary = monthlySalary;
+            saveSettings(settings);
+            renderBudget();
+            showToast(`Salary updated to ${formatCurrency(monthlySalary)}`, 'success');
+        }
+
+        function updateBudget(category, value) {
+            const amount = parseFloat(value) || 0;
+            budgetAllocation[category] = amount;
+            settings.budgets = budgetAllocation;
+            saveSettings(settings);
+            renderBudget();
+            showToast(`Budget for ${category} updated to ${formatCurrency(amount)}`, 'info');
+        }
+
+        // ============================================================
         //  RENDER: EXPENSES LIST
         // ============================================================
         function renderExpenses() {
@@ -1427,13 +1919,11 @@
                 filtered = filtered.filter(e => e.date <= dateTo);
             }
 
-            // Sort by date DESC, then by createdAt DESC
             filtered = [...filtered].sort((a, b) => {
                 if (a.date !== b.date) return b.date.localeCompare(a.date);
                 return (b.createdAt || 0) - (a.createdAt || 0);
             });
 
-            // Update count & total
             document.getElementById('expenseCountLabel').textContent = filtered.length + ' entries';
             const total = filtered.reduce((sum, e) => sum + Number(e.amount), 0);
             document.getElementById('totalAmountDisplay').textContent = formatCurrency(total);
@@ -1484,7 +1974,6 @@
         let monthlyChartInstance = null;
 
         function renderDashboard() {
-            // --- Stats ---
             const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
             const count = expenses.length;
             document.getElementById('statTotal').textContent = formatCurrency(total);
@@ -1512,7 +2001,6 @@
             document.getElementById('statTopCategory').textContent = topCat !== '—' ? getCategoryEmoji(topCat) + ' ' + topCat :
             '—';
 
-            // --- Charts ---
             const ctxCat = document.getElementById('categoryChart').getContext('2d');
             const catLabels = Object.keys(catMap);
             const catValues = Object.values(catMap);
@@ -1543,7 +2031,6 @@
                 }
             });
 
-            // Monthly bar (last 6 months)
             const monthMap = {};
             const months = [];
             for (let i = 5; i >= 0; i--) {
@@ -1599,7 +2086,6 @@
                 }
             });
 
-            // --- Recent Transactions ---
             const recentList = document.getElementById('recentTransactionsList');
             const sorted = [...expenses].sort((a, b) => {
                 if (a.date !== b.date) return b.date.localeCompare(a.date);
@@ -1626,6 +2112,112 @@
                 `;
             });
             recentList.innerHTML = html;
+        }
+
+        // ============================================================
+        //  RENDER: BUDGET
+        // ============================================================
+        let budgetChartInstance = null;
+
+        function renderBudget() {
+            // Update salary input
+            document.getElementById('monthlySalary').value = monthlySalary || '';
+            document.getElementById('annualSalaryDisplay').textContent = 'Annual: ' + formatCurrency((monthlySalary || 0) *
+            12);
+
+            const stats = getMonthlyStats();
+            document.getElementById('budgetIncome').textContent = formatCurrency(stats.income);
+            document.getElementById('budgetExpenses').textContent = formatCurrency(stats.totalExpenses);
+            document.getElementById('budgetSavings').textContent = formatCurrency(stats.savings);
+            document.getElementById('budgetSpendRate').textContent = stats.spendRate.toFixed(1) + '%';
+
+            const savingsRate = stats.income > 0 ? (stats.savings / stats.income) * 100 : 0;
+            document.getElementById('savingsRate').textContent = savingsRate.toFixed(1) + '% saved';
+            document.getElementById('savingsRate').style.color = stats.savings >= 0 ? 'var(--success)' : 'var(--danger)';
+
+            // Render budget categories
+            const categories = getAllCategories();
+            const grid = document.getElementById('budgetCategoryGrid');
+            let html = '';
+            categories.forEach(cat => {
+                const spent = getCategorySpending(cat);
+                const budgeted = budgetAllocation[cat] || 0;
+                const status = budgeted > 0 ? (spent > budgeted ? 'over' : (spent === budgeted ? 'exact' : 'under')) :
+                    'none';
+                const statusText = status === 'over' ? 'Over' : (status === 'under' ? 'Under' : (status === 'exact' ?
+                    'On track' : 'No budget'));
+
+                html += `
+                    <div class="budget-category-item">
+                        <div class="cat-info">
+                            <span style="font-size:1.2rem;">${getCategoryEmoji(cat)}</span>
+                            <span class="cat-name">${cat}</span>
+                            <span class="cat-spend">Spent: ${formatCurrency(spent)}</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <input type="number" class="cat-input" data-category="${cat}" value="${budgeted}" step="0.001" min="0" placeholder="0.000" />
+                            <span class="budget-status ${status}">${statusText}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+
+            // Attach budget input events (auto-save on change)
+            grid.querySelectorAll('.cat-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const category = this.dataset.category;
+                    const value = parseFloat(this.value) || 0;
+                    updateBudget(category, value);
+                });
+            });
+
+            // Render budget chart (Budget vs Actual)
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            const labels = categories;
+            const budgetData = labels.map(cat => budgetAllocation[cat] || 0);
+            const actualData = labels.map(cat => getCategorySpending(cat));
+
+            if (budgetChartInstance) budgetChartInstance.destroy();
+            budgetChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Budgeted',
+                        data: budgetData,
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 4,
+                    }, {
+                        label: 'Actual',
+                        data: actualData,
+                        backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { padding: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: v => currencySymbol + ' ' + v.toFixed(0)
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         // ============================================================
@@ -1709,7 +2301,6 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (!Array.isArray(data)) throw new Error('Invalid format');
-                    // Validate basic structure
                     const valid = data.every(item => item.id && item.description && item.amount && item.category && item
                         .date);
                     if (!valid) throw new Error('Missing required fields in some entries');
@@ -1765,7 +2356,17 @@
         }
 
         function openSettingsModal() {
-            document.getElementById('settingsCurrency').value = currencySymbol;
+            const presetSelect = document.getElementById('settingsCurrencyPreset');
+            const currencyInput = document.getElementById('settingsCurrency');
+            const currentCurrency = currencySymbol;
+            const presetOptions = Array.from(presetSelect.options).map(o => o.value.toUpperCase());
+            if (presetOptions.includes(currentCurrency.toUpperCase())) {
+                presetSelect.value = currentCurrency.toUpperCase();
+            } else {
+                presetSelect.value = 'custom';
+            }
+            currencyInput.value = currentCurrency;
+
             const darkToggle = document.getElementById('settingsDarkToggle');
             if (document.body.classList.contains('dark-mode')) {
                 darkToggle.classList.add('active');
@@ -1783,7 +2384,8 @@
         //  SETTINGS
         // ============================================================
         function applySettings() {
-            const newCurrency = document.getElementById('settingsCurrency').value.trim().toUpperCase() || 'OMR';
+            const currencyInput = document.getElementById('settingsCurrency');
+            const newCurrency = currencyInput.value.trim().toUpperCase() || 'OMR';
             currencySymbol = newCurrency;
             settings.currency = currencySymbol;
 
@@ -1791,12 +2393,13 @@
             settings.darkMode = isDark;
             saveSettings(settings);
 
-            // Update UI
             document.querySelectorAll('.currency-label').forEach(el => el.textContent = currencySymbol);
             document.getElementById('currencyBadge').textContent = currencySymbol;
             document.getElementById('currencyLabelAdd').textContent = currencySymbol;
             document.getElementById('currencyLabelEdit').textContent = currencySymbol;
+            document.getElementById('currencyLabelSalary').textContent = currencySymbol;
 
+            startClock();
             renderAll();
             showToast(`Settings updated (${currencySymbol})`, 'success');
         }
@@ -1814,10 +2417,10 @@
             }
             settings.darkMode = isDark;
             saveSettings(settings);
-            // Re-render charts to match theme (Chart.js auto-detects, but we force redraw for safety)
             setTimeout(() => {
                 if (categoryChartInstance) categoryChartInstance.update();
                 if (monthlyChartInstance) monthlyChartInstance.update();
+                if (budgetChartInstance) budgetChartInstance.update();
             }, 100);
         }
 
@@ -1827,6 +2430,7 @@
         function renderAll() {
             renderExpenses();
             renderDashboard();
+            renderBudget();
         }
 
         // ============================================================
@@ -1846,6 +2450,11 @@
                     if (monthlyChartInstance) monthlyChartInstance.resize();
                 }, 100);
             }
+            if (viewName === 'budget') {
+                setTimeout(() => {
+                    if (budgetChartInstance) budgetChartInstance.resize();
+                }, 100);
+            }
         }
 
         // ============================================================
@@ -1861,13 +2470,46 @@
                 document.querySelector('#darkModeToggle i').className = 'fas fa-moon';
             }
             currencySymbol = settings.currency || 'OMR';
+            monthlySalary = settings.salary || 0;
+            budgetAllocation = settings.budgets || {};
+
             document.querySelectorAll('.currency-label').forEach(el => el.textContent = currencySymbol);
             document.getElementById('currencyBadge').textContent = currencySymbol;
             document.getElementById('currencyLabelAdd').textContent = currencySymbol;
             document.getElementById('currencyLabelEdit').textContent = currencySymbol;
+            document.getElementById('currencyLabelSalary').textContent = currencySymbol;
 
-            // --- Set default date ---
+            startClock();
             document.getElementById('expDate').value = getTodayStr();
+
+            // --- Currency preset sync ---
+            const presetSelect = document.getElementById('settingsCurrencyPreset');
+            const currencyInput = document.getElementById('settingsCurrency');
+            presetSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {} else {
+                    currencyInput.value = this.value;
+                }
+            });
+            currencyInput.addEventListener('input', function() {
+                const val = this.value.trim().toUpperCase();
+                const options = Array.from(presetSelect.options).map(o => o.value.toUpperCase());
+                if (options.includes(val)) {
+                    presetSelect.value = val;
+                } else {
+                    presetSelect.value = 'custom';
+                }
+            });
+
+            // --- Salary update ---
+            document.getElementById('updateSalaryBtn').addEventListener('click', function() {
+                const val = document.getElementById('monthlySalary').value;
+                updateSalary(val);
+            });
+            document.getElementById('monthlySalary').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('updateSalaryBtn').click();
+                }
+            });
 
             // --- Add expense ---
             document.getElementById('addExpenseForm').addEventListener('submit', function(e) {
@@ -1953,7 +2595,6 @@
             document.getElementById('settingsDarkToggle').addEventListener('click', function(e) {
                 e.stopPropagation();
                 toggleDarkMode();
-                // Update the toggle state visually
                 this.classList.toggle('active');
             });
 
@@ -1988,7 +2629,6 @@
                 if (e.key === 'Enter' && document.getElementById('deleteModal').classList.contains('open')) {
                     confirmDelete();
                 }
-                // Ctrl+S to open settings
                 if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
                     e.preventDefault();
                     openSettingsModal();
@@ -2008,6 +2648,7 @@
             resizeTimer = setTimeout(() => {
                 if (categoryChartInstance) categoryChartInstance.resize();
                 if (monthlyChartInstance) monthlyChartInstance.resize();
+                if (budgetChartInstance) budgetChartInstance.resize();
             }, 200);
         });
     </script>
